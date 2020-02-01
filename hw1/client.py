@@ -25,12 +25,9 @@ def client():
 # Next, attempt to open files
     input_filepath = "HW1test.txt"
     output_filepath = "HW1out.txt"
-    try:
-        input_file = open(input_filepath, "r")
-        output_file = open(output_filepath, "w")
-    except:
-        print("There was an error opening file(s): " + input_filepath + ", " + output_filepath)
-
+    input_file = open(input_filepath, "r")
+    output_file = open(output_filepath, "w")
+    
 # Iterate file line by line
     for line in input_file:
         cs.send(line)
