@@ -33,3 +33,5 @@ def translate(str):
     for char in str:
         trans += ord(char) + "_"
     return trans.rstrip("_")
+
+server()

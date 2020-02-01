@@ -42,3 +42,5 @@ def client():
 # close the cclient socket
     cs.close()
     exit()
+
+client()
