@@ -18,12 +18,27 @@ def client():
 # First, confirm that the connection was successful and that the server is ready
     msg = cs.recv(100)
 
-    if(msg == )
+    if(msg != "Welcome to CS 352"):
+        print("Error: server response was invalid.")
+    
 
-# Receive data from the server
-    data_from_server=cs.recv(100)
+# Next, attempt to open files
+    input_filepath = "HW1test.txt"
+    output_filepath = "HW1out.txt"
+    try:
+        input_file = open(input_filepath, "r")
+        output_file = open(output_filepath, "w")
+    except:
+        print("There was an error opening file(s): " + input_filepath + ", " + output_filepath)
 
-    print("[C]: Data received from server::  ",data_from_server.decode('utf-8'))
+# Iterate file line by line
+    for line in input_file:
+        cs.send(line)
+        print("Sent: " + line)
+        response = cs.recv(100).decode('utf-8')
+        print("Response: " + response)
+        output_file.write(line)
+        
 # close the cclient socket
     cs.close()
     exit()

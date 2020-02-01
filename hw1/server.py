@@ -1,3 +1,5 @@
+import socket as mysoc
+
 def server():
     try:
         ss=mysoc.socket(mysoc.AF_INET, mysoc.SOCK_STREAM)
@@ -17,6 +19,10 @@ def server():
     msg="Welcome to CS 352"
     csockid.send(msg.encode('utf-8'))
 
+    while True:
+        output = csockid.recv(100)
+        csockid.send(translate(output).encode('utf-8'))
+    
    # Close the server socket
     ss.close()
     exit()
@@ -26,4 +32,4 @@ def translate(str):
     trans = ""
     for char in str:
         trans += ord(char) + "_"
-    return trans.rstrip("_");
+    return trans.rstrip("_")
