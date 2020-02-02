@@ -30,7 +30,7 @@ def client():
     
 # Iterate file line by line
     for line in input_file:
-        cs.send(line)
+        cs.send(line.encode('utf-8'))
         print("Sent: " + line)
         response = cs.recv(100).decode('utf-8')
         print("Response: " + response)
