@@ -16,10 +16,11 @@ def client():
     cs.connect(server_binding)
 
 # First, confirm that the connection was successful and that the server is ready
-    msg = cs.recv(100)
+    msg = cs.recv(100).decode('utf-8')
 
     if(msg != "Welcome to CS 352"):
         print("Error: server response was invalid.")
+        exit()
     
 
 # Next, attempt to open files
