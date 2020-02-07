@@ -20,7 +20,8 @@ def server():
     csockid.send(msg.encode('utf-8'))
 
     while True:
-        output = csockid.recv(100)
+        output = csockid.recv(100).decode('utf-8')
+        print("")
         csockid.send(translate(output).encode('utf-8'))
     
    # Close the server socket
@@ -28,9 +29,9 @@ def server():
     exit()
 
 # translate str to ASCII as 1_2_3 for example
-def translate(str):
+def translate(msg):
     trans = ""
-    for char in str:
+    for char in msg:
         trans += str(ord(char)) + "_"
     return trans.rstrip("_")
 
