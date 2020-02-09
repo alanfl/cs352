@@ -22,8 +22,13 @@ def server():
 
 # await number of lines from client
     num_lines = csockid.recv(100).decode('utf-8')
+    if(!(isinstance(int(numlines), int))):
+        print("[S]: Invalid message from client.")
+        exit()
+    
+    csock.send("OK".encode('utf-8'))
 
-    for x in range(0, num_lines)
+    for x in range(0, num_lines):
         output = csockid.recv(100).decode('utf-8')
         print("[S]: Message from client: " + output)
         response = translate(output)
