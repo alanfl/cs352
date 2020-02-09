@@ -22,7 +22,7 @@ def server():
 
 # await number of lines from client
     num_lines = csockid.recv(100).decode('utf-8')
-    if(!(isinstance(int(numlines), int))):
+    if(!isinstance(int(numlines), int)):
         print("[S]: Invalid message from client.")
         exit()
     
