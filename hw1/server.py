@@ -14,15 +14,21 @@ def server():
     localhost_ip=(mysoc.gethostbyname(host))
     print("[S]: Server IP address is  ",localhost_ip)
     csockid,addr=ss.accept()
-    print ("[S]: Got a connection request from a client at", addr)
+    print("[S]: Got a connection request from a client at", addr)
+
 # send a intro  message to the client.
     msg="Welcome to CS 352"
     csockid.send(msg.encode('utf-8'))
 
-    while True:
+# await number of lines from client
+    num_lines = csockid.recv(100).decode('utf-8')
+
+    for x in range(0, num_lines)
         output = csockid.recv(100).decode('utf-8')
-        print("")
-        csockid.send(translate(output).encode('utf-8'))
+        print("[S]: Message from client: " + output)
+        response = translate(output)
+        csockid.send(response.encode('utf-8'))
+        print("[S]: Sent response: " + response)
     
    # Close the server socket
     ss.close()

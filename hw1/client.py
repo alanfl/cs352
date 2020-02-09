@@ -22,12 +22,24 @@ def client():
         print("Error: server response was invalid.")
         exit()
     
-
 # Next, attempt to open files
     input_filepath = "HW1test.txt"
     output_filepath = "HW1out.txt"
     input_file = open(input_filepath, "r")
     output_file = open(output_filepath, "w")
+
+# Send number of lines to server
+    num_lines = 0
+    for line in input_file:
+        num_lines = num_lines + 1
+
+    cs.send(str(num_lines).encode('utf-8'))
+
+    msg = cs.recv(100).decode('utf-8')
+
+    if(msg != "OK"):
+        print("Error: server line response was invalid.")
+        exit()
     
 # Iterate file line by line
     for line in input_file:
