@@ -22,34 +22,35 @@ def client():
         print("Error: server response was invalid.")
         exit()
     
-# Next, attempt to open files
-    input_filepath = "HW1test.txt"
-    output_filepath = "HW1out.txt"
-    input_file = open(input_filepath, "r")
-    output_file = open(output_filepath, "w")
-
 # Send number of lines to server
-    num_lines = 0
-    for line in input_file:
-        num_lines = num_lines + 1
+    with open("HW1test.txt") as input_file:
+        num_lines = 0
+        for line in input_file:
+            num_lines = num_lines + 1
+        input_file.close()
 
     cs.send(str(num_lines).encode('utf-8'))
-
     msg = cs.recv(100).decode('utf-8')
 
     if(msg != "OK"):
         print("Error: server line response was invalid.")
         exit()
 
-    cs.send("Sending".encode('utf-8'))
+    cs.send(("Sending").encode('utf-8'))
+    print("[C]: Sending...")
     
+# Next, attempt to open files
+    output_file = open("HW1out.txt", "w")
+
 # Iterate file line by line
-    for line in input_file:
-        cs.send(line.encode('utf-8'))
-        print("Sent: " + line)
-        response = cs.recv(100).decode('utf-8')
-        print("Response: " + response)
-        output_file.write(line)
+    with open("HW1test.txt") as input_file:
+        for line in input_file:
+            line = line.rstrip()
+            cs.send(line.encode('utf-8'))
+            print("[C] Sent: " + line)
+            response = cs.recv(100).decode('utf-8')
+            print("[C] Response: " + response)
+            output_file.write(line)
         
 # close the cclient socket
     cs.close()
