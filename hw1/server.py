@@ -26,7 +26,7 @@ def server():
         print("[S]: Invalid message from client.")
         exit()
     
-    csock.send("OK".encode('utf-8'))
+    csockid.send("OK".encode('utf-8'))
 
     for x in range(0, num_lines):
         output = csockid.recv(100).decode('utf-8')
