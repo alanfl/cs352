@@ -6,7 +6,7 @@ def server():
         print("[S]: Server socket created")
     except mysoc.error as err:
         print('{} \n'.format("socket open error ",err))
-    server_binding=('',50007)
+    server_binding=('',50009)
     ss.bind(server_binding)
     ss.listen(1)
     host=mysoc.gethostname()
@@ -28,7 +28,13 @@ def server():
     
     csockid.send("OK".encode('utf-8'))
 
-    for x in range(0, num_lines):
+# await confirmation for sending
+    confirm = csockid.recv(100).decode('utf-8')
+    if(confirm != "Sending"):
+        print("[S]: Invalid message from client.")
+        exit()
+
+    for x in range(0, int(num_lines)):
         output = csockid.recv(100).decode('utf-8')
         print("[S]: Message from client: " + output)
         response = translate(output)

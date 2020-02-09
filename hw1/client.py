@@ -9,7 +9,7 @@ def client():
         print('{} \n'.format("socket open error ",err))
 
 # Define the port on which you want to connect to the server
-    port = 50007
+    port = 50009
 # Connect to the server on local machine
     sa_sameas_myaddr =mysoc.gethostbyname(mysoc.gethostname())
     server_binding=(sa_sameas_myaddr,port)
@@ -40,6 +40,8 @@ def client():
     if(msg != "OK"):
         print("Error: server line response was invalid.")
         exit()
+
+    cs.send("Sending".encode('utf-8'))
     
 # Iterate file line by line
     for line in input_file:
