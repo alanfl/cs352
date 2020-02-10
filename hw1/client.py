@@ -16,28 +16,11 @@ def client():
     cs.connect(server_binding)
 
 # First, confirm that the connection was successful and that the server is ready
-    msg = cs.recv(100).decode('utf-8')
+    msg = cs.recv(1024).decode('utf-8')
 
     if(msg != "Welcome to CS 352"):
         print("Error: server response was invalid.")
         exit()
-    
-# Send number of lines to server
-    with open("HW1test.txt") as input_file:
-        num_lines = 0
-        for line in input_file:
-            num_lines = num_lines + 1
-        input_file.close()
-
-    cs.send(str(num_lines).encode('utf-8'))
-    msg = cs.recv(100).decode('utf-8')
-
-    if(msg != "OK"):
-        print("Error: server line response was invalid.")
-        exit()
-
-    cs.send(("Sending").encode('utf-8'))
-    print("[C]: Sending...")
     
 # Next, attempt to open files
     output_file = open("HW1out.txt", "w")
@@ -48,10 +31,12 @@ def client():
             line = line.rstrip()
             cs.send(line.encode('utf-8'))
             print("[C] Sent: " + line)
-            response = cs.recv(100).decode('utf-8')
+            response = cs.recv(1024).decode('utf-8')
             print("[C] Response: " + response)
-            output_file.write(line)
-        
+            output_file.write(response + '\n')
+    
+    print("[C]: Done, terminating connection.")
+    cs.send("".encode('utf-8'))
 # close the cclient socket
     cs.close()
     exit()

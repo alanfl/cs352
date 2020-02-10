@@ -20,29 +20,16 @@ def server():
     msg="Welcome to CS 352"
     csockid.send(msg.encode('utf-8'))
 
-# await number of lines from client
-    num_lines = csockid.recv(100).decode('utf-8')
-    print("[S]: Receiving lines: " + num_lines)
-    if(isinstance(int(num_lines), int) == False):
-        print("[S]: Invalid message from client.")
-        exit()
-    
-    csockid.send("OK".encode('utf-8'))
-
-# await confirmation for sending
-    confirm = csockid.recv(100).decode('utf-8')
-    if(confirm != "Sending"):
-        print("[S]: Invalid message from client.")
-        exit()
-
-    print("Receiving...")
-
-    for x in range(0, int(num_lines)):
-        output = csockid.recv(100).decode('utf-8')
-        print("[S]: Message from client: " + output)
-        response = translate(output)
-        csockid.send(response.encode('utf-8'))
-        print("[S]: Sent response: " + response)
+    while True:
+        msg = csockid.recv(1024).decode('utf-8')
+        print("[S]: Message from client: " + msg)
+        if(msg != ""):
+            response = translate(msg)
+            csockid.send(response.encode('utf-8'))
+            print("[S]: Sent response: " + response)
+        else:
+            print("[S]: Terminating connection.")
+            break
     
    # Close the server socket
     ss.close()
