@@ -40,26 +40,27 @@ def root_server(rsListenPort):
 
 # Begin accepting requests
     host = mysoc.gethostname()
-    print("[S]: Server host name is: ", host)
+    print("[RS]: Server host name is: ", host)
     localhost_ip=(mysoc.gethostbyname(host))
-    print("[S]: Server IP address is: ", localhost_ip)
+    print("[RS]: Server IP address is: ", localhost_ip)
 
 # Accept a request from clients
     csockid,addr = rs.accept()
-    print("[S]: Got a connection request from a client at", addr)
+    print("[RS]: Got a connection request from a client at", addr)
 
 # Receive and process a hostname request
     hostname = csockid.recv(1024).decode('utf-8')
-    print("[S]: Hostname requested from client: " + hostname)
+    print("[RS]: Hostname requested from client: " + hostname)
 
-# 
-    if hostname in table:
+# Check if requested hostname is in table
+    if hostname in table.keys():
         response = hostname + " " + table[hostname]
     else:
         response = tsHostname + " - ns"
 
+# Send the response
     csockid.send(response.encode('utf-8'))
-    print("[S]: Sent response: " + response)
+    print("[RS]: Sent response: " + response)
     
    # Close the server socket
     rs.close()

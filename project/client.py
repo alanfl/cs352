@@ -20,7 +20,7 @@ def client(rsHostname, rsListenPort, tsListenPort):
     with open("PROJI-HNS.txt") as input_file:
         for line in input_file:
 
-            hostname = line.lower()
+            hostname = line.lower().rstrip()
 
             # Send request for hostname
             rs.send(hostname.encode('utf-8'))
