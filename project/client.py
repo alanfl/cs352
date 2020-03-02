@@ -42,11 +42,8 @@ def client(rsHostname, rsListenPort, tsListenPort):
                 except mysoc.error as err:
                     print("[C]: Top-level socket open error")
 
-                # Define port for top-level server
-                ts_port = tsListenPort
-
                 # Connect to top-level server
-                ts_server_binding = (response_split[0], ts_port)
+                ts_server_binding = (response_split[0], int(tsListenPort))
                 ts.connect(ts_server_binding)
 
                 # Send hostname
