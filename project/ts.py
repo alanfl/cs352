@@ -41,18 +41,23 @@ def top_server(tsListenPort):
     csockid,addr = ts.accept()
     print("[TS]: Got a connection request from a client at", addr)
 
-# Receive and process a hostname request
-    hostname = csockid.recv(1024).decode('utf-8')
-    print("[TS]: Hostname requested from client: " + hostname)
+# Receive and process hostname requests
+    while True:
+        hostname = csockid.recv(1024).decode('utf-8')
+        print("[TS]: Hostname requested from client: " + hostname)
 
-# Check if hostname is in table, otherwise return error message
-    if hostname in table:
-        response = hostname + " " + table[hostname]
-    else:
-        response = hostname + " - Error:HOST NOT FOUND"
+        if(hostname != ""):
+            # Check if hostname is in table, otherwise return error message
+            if hostname in table:
+                response = hostname + " " + table[hostname]
+            else:
+                response = hostname + " - Error:HOST NOT FOUND"
+        else:
+            print("[TS]: Terminating connection.")
+            break
 
-    csockid.send(response.encode('utf-8'))
-    print("[TS]: Sent response: " + response)
+        csockid.send(response.encode('utf-8'))
+        print("[TS]: Sent response: " + response)
     
    # Close the server socket
     ts.close()

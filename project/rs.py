@@ -48,19 +48,23 @@ def root_server(rsListenPort):
     csockid,addr = rs.accept()
     print("[RS]: Got a connection request from a client at", addr)
 
-# Receive and process a hostname request
-    hostname = csockid.recv(1024).decode('utf-8')
-    print("[RS]: Hostname requested from client: " + hostname)
+    while True:
+            hostname = csockid.recv(1024).decode('utf-8')
+            print("[RS]: Hostname requested from client: " + hostname)
 
-# Check if requested hostname is in table
-    if hostname in table.keys():
-        response = hostname + " " + table[hostname]
-    else:
-        response = tsHostname + " - ns"
-
-# Send the response
-    csockid.send(response.encode('utf-8'))
-    print("[RS]: Sent response: " + response)
+            if(hostname != ""):
+                # Check if hostname is in table, otherwise return error message
+                if hostname in table:
+                    response = hostname + " " + table[hostname]
+                else:
+                    response = tsHostname + " - ns"
+            else:
+                print("[RS]: Terminating connection.")
+                break
+            
+            # Send the response
+            csockid.send(response.encode('utf-8'))
+            print("[RS]: Sent response: " + response)
     
    # Close the server socket
     rs.close()
