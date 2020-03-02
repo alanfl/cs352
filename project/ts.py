@@ -1,45 +1,61 @@
 import socket as mysoc
+import sys
 
-def server():
+def top_server(tsListenPort):
+
+# Track hostname ip pairs as a dictionary
+    table = {}
+
+    # Load file into dictionary
+    with open("PROJI-DNSTS.txt") as input_file:
+        for line in input_file:
+            entry = line.lower().split()
+
+            # We must check each entry's type, in order to be able to define our tsHostname
+            # Ignore invalid entries
+            if(entry[2] == "a"):
+                hostname = entry[0]
+                table[hostname] = entry[1] + " " + entry[2]
+            else:
+                continue
+
+# Establish sockets for hosting
     try:
-        ss=mysoc.socket(mysoc.AF_INET, mysoc.SOCK_STREAM)
-        print("[S]: Server socket created")
+        ts = mysoc.socket(mysoc.AF_INET, mysoc.SOCK_STREAM)
+        print("[TS]: Top-level server socket created")
     except mysoc.error as err:
-        print('{} \n'.format("socket open error ",err))
-    server_binding=('',50009)
-    ss.bind(server_binding)
-    ss.listen(1)
-    host=mysoc.gethostname()
-    print("[S]: Server host name is: ",host)
+        print("[TS]: Top-level socket open error")
+
+# Open server and begin listening
+    server_binding=('', int(tsListenPort))
+    ts.bind(server_binding)
+    ts.listen(1)
+
+# Begin accepting requests
+    host = mysoc.gethostname()
+    print("[TS]: Server host name is: ", host)
     localhost_ip=(mysoc.gethostbyname(host))
-    print("[S]: Server IP address is  ",localhost_ip)
-    csockid,addr=ss.accept()
-    print("[S]: Got a connection request from a client at", addr)
+    print("[TS]: Server IP address is: ", localhost_ip)
 
-# send a intro  message to the client.
-    msg="Welcome to CS 352"
-    csockid.send(msg.encode('utf-8'))
+# Accept a request from clients
+    csockid,addr = ts.accept()
+    print("[TS]: Got a connection request from a client at", addr)
 
-    while True:
-        msg = csockid.recv(1024).decode('utf-8')
-        print("[S]: Message from client: " + msg)
-        if(msg != ""):
-            response = translate(msg)
-            csockid.send(response.encode('utf-8'))
-            print("[S]: Sent response: " + response)
-        else:
-            print("[S]: Terminating connection.")
-            break
+# Receive and process a hostname request
+    hostname = csockid.recv(1024).decode('utf-8')
+    print("[TS]: Hostname requested from client: " + hostname)
+
+# Check if hostname is in table, otherwise return error message
+    if hostname in table:
+        response = hostname + " " + table[hostname]
+    else:
+        response = hostname + " - Error:HOST NOT FOUND"
+
+    csockid.send(response.encode('utf-8'))
+    print("[TS]: Sent response: " + response)
     
    # Close the server socket
-    ss.close()
+    ts.close()
     exit()
 
-# translate str to ASCII as 1_2_3 for example
-def translate(msg):
-    trans = ""
-    for char in msg:
-        trans += str(ord(char)) + "_"
-    return trans.rstrip("_")
-
-server()
+top_server(sys.argv[1])
