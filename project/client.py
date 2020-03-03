@@ -16,6 +16,9 @@ def client(rsHostname, rsListenPort, tsListenPort):
 # Open output files
     output_file = open("RESOLVED.txt", "w")
 
+# Variable to store ts socket
+    ts = None
+
 # Iterate input file line by line
     with open("PROJI-HNS.txt") as input_file:
         for line in input_file:
@@ -36,15 +39,16 @@ def client(rsHostname, rsListenPort, tsListenPort):
             # Root server returned another name server
             elif(response_split[2] == "ns"):
                 # Create second socket for ts
-                try:
-                    ts = mysoc.socket(mysoc.AF_INET, mysoc.SOCK_STREAM)
-                    print("[C]: Top-level client socket created")
-                except mysoc.error as err:
-                    print("[C]: Top-level socket open error")
+                if(ts == None):
+                    try:
+                        ts = mysoc.socket(mysoc.AF_INET, mysoc.SOCK_STREAM)
+                        print("[C]: Top-level client socket created")
+                    except mysoc.error as err:
+                        print("[C]: Top-level socket open error")
 
-                # Connect to top-level server
-                ts_server_binding = (response_split[0], int(tsListenPort))
-                ts.connect(ts_server_binding)
+                    # Connect to top-level server
+                    ts_server_binding = (response_split[0], int(tsListenPort))
+                    ts.connect(ts_server_binding)
 
                 # Send hostname
                 ts.send(hostname.encode('utf-8'))
@@ -53,9 +57,6 @@ def client(rsHostname, rsListenPort, tsListenPort):
                 response = ts.recv(1024).decode('utf-8')
                 print("[C] Response: " + response)
                 output_file.write(response + '\n')
-
-                # Close connections and sockets
-                ts.close()
             else:
                 print("[C] Malformed response.")
                 exit()
@@ -66,6 +67,9 @@ def client(rsHostname, rsListenPort, tsListenPort):
     output_file.close()
 
 # Close the root server socket
+# Close connections and sockets
+    if(ts != None):
+        ts.close()
     rs.close()
     exit()
 
