@@ -10,7 +10,12 @@ def client(rsHostname, rsListenPort, tsListenPort):
         print("[C]: Root server-client socket open error")
 
 # Connect to the root server
-    rs_server_binding=(rsHostname, int(rsListenPort))
+
+    if rsHostname.lower() == "localhost":
+        rs_addr = mysoc.gethostbyname(mysoc.gethostname())
+    else:
+        rs_addr = mysoc.gethostbyname(rsHostname.lower())
+    rs_server_binding=(rs_addr, int(rsListenPort))
     rs.connect(rs_server_binding)
     
 # Open output files
@@ -47,7 +52,11 @@ def client(rsHostname, rsListenPort, tsListenPort):
                         print("[C]: Top-level socket open error")
 
                     # Connect to top-level server
-                    ts_server_binding = (response_split[0], int(tsListenPort))
+                    if response_split[0].lower() == "localhost":
+                        ts_addr = mysoc.gethostbyname(mysoc.gethostname())
+                    else:
+                        ts_addr = mysoc.gethostbyname(response_split[0].lower())
+                    ts_server_binding = (ts_addr, int(tsListenPort))
                     ts.connect(ts_server_binding)
 
                 # Send hostname

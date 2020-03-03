@@ -9,12 +9,12 @@ def top_server(tsListenPort):
     # Load file into dictionary
     with open("PROJI-DNSTS.txt") as input_file:
         for line in input_file:
-            entry = line.lower().split()
+            entry = line.split()
 
             # We must check each entry's type, in order to be able to define our tsHostname
             # Ignore invalid entries
-            if(entry[2] == "a"):
-                hostname = entry[0]
+            if(entry[2].lower() == "a"):
+                hostname = entry[0].lower()
                 table[hostname] = entry[1] + " " + entry[2]
             else:
                 continue
@@ -48,7 +48,7 @@ def top_server(tsListenPort):
 
         if(hostname != ""):
             # Check if hostname is in table, otherwise return error message
-            if hostname in table:
+            if hostname.lower() in table:
                 response = hostname + " " + table[hostname]
             else:
                 response = hostname + " - Error:HOST NOT FOUND"

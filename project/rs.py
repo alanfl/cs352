@@ -12,18 +12,18 @@ def root_server(rsListenPort):
     # Load file into dictionary
     with open("PROJI-DNSRS.txt") as input_file:
         for line in input_file:
-            entry = line.lower().split()
+            entry = line.split()
 
             # We must check each entry's type, in order to be able to define our tsHostname
             # Ignore invalid entries
             if(len(entry) != 3):
                 continue
             # This entry specifies the top-level name server, track it
-            if(entry[2] == "ns"):
+            if(entry[2].lower() == "ns"):
                 tsHostname = entry[0]
             # Normal entry
-            elif(entry[2] == "a"):
-                hostname = entry[0]
+            elif(entry[2].lower() == "a"):
+                hostname = entry[0].lower()
                 table[hostname] = entry[1] + " " + entry[2]
 
 # Establish sockets for hosting
@@ -54,10 +54,10 @@ def root_server(rsListenPort):
 
             if(hostname != ""):
                 # Check if hostname is in table, otherwise return error message
-                if hostname in table:
+                if hostname.lower() in table:
                     response = hostname + " " + table[hostname]
                 else:
-                    response = tsHostname + " - ns"
+                    response = tsHostname + " - NS"
             else:
                 print("[RS]: Terminating connection.")
                 break
