@@ -46,6 +46,8 @@ def top_server(tsListenPort):
         hostname = csockid.recv(1024).decode('utf-8')
         print("[TS1]: Hostname requested from client: " + hostname)
 
+        response = ""
+
         if(hostname != ""):
             # Check if hostname is in table, otherwise return error message
             if hostname.lower() in table:

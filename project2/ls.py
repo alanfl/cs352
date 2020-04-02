@@ -66,9 +66,9 @@ def load_server(lsListenPort, ts1Hostname, ts1ListenPort, ts2Hostname, ts2Listen
                 ts1.send(hostname.encode('utf-8'))
                 ts2.send(hostname.encode('utf-8'))
 
-                target_server = select.select([ts1, ts2], None, None, 5000)
-                if(target_server):
-                    response = target_server.recv(1024).decode('utf-8')
+                s = select.select([ts1, ts2], [], [], 5)
+                if(s[0]):
+                    response = s[0][0].recv(1024).decode('utf-8')
                 else:
                     response = hostname + " - Error:HOST NOT FOUND"
             else:

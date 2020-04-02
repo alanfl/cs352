@@ -1,7 +1,7 @@
 import socket as mysoc
 import sys
 
-def client(lsHostname, lsListenPort, tsListenPort):
+def client(lsHostname, lsListenPort):
 # Establishing socket for root server
     try:
         ls = mysoc.socket(mysoc.AF_INET, mysoc.SOCK_STREAM)
@@ -43,4 +43,4 @@ def client(lsHostname, lsListenPort, tsListenPort):
     ls.close()
     exit()
 
-client(sys.argv[1], sys.argv[2], sys.argv[3])
+client(sys.argv[1], sys.argv[2])

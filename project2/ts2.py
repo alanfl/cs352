@@ -46,17 +46,17 @@ def top_server(tsListenPort):
         hostname = csockid.recv(1024).decode('utf-8')
         print("[TS2]: Hostname requested from client: " + hostname)
 
+        response = ""
+
         if(hostname != ""):
             # Check if hostname is in table, otherwise return error message
             if hostname.lower() in table:
                 response = hostname + " " + table[hostname]
-            else:
-                response = hostname + " - Error:HOST NOT FOUND"
+                csockid.send(response.encode('utf-8'))
         else:
             print("[TS2]: Terminating connection.")
             break
 
-        csockid.send(response.encode('utf-8'))
         print("[TS2]: Sent response: " + response)
     
    # Close the server socket
